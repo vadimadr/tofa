@@ -2,6 +2,8 @@ from pathlib import Path
 
 import pytest
 
+from tofa.io import imread
+
 TEST_ROOT = Path(__file__).parent
 SOURCE_ROOT = TEST_ROOT.parent
 TEST_DATA = TEST_ROOT.joinpath("test_data")
@@ -18,3 +20,9 @@ class GetTestAssetFixture:
 @pytest.fixture
 def get_asset():
     return GetTestAssetFixture(TEST_DATA)
+
+
+@pytest.fixture
+def lena_rgb():
+    lena_path = TEST_DATA.joinpath("lena.png")
+    return imread(lena_path)

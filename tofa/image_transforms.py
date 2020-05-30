@@ -56,6 +56,13 @@ class Interpolation(Enum):
         return self.value.pil
 
 
+def image_size(image):
+    """Returns image size (w x h)"""
+    if _is_array(image):
+        return image.shape[:2]
+    return image.size
+
+
 def color_convert(image: image_like, colorspace="RGB", from_colorspace=None):
     original_pil = _is_pil_image(image)
     if from_colorspace is None:
@@ -88,6 +95,31 @@ def color_convert(image: image_like, colorspace="RGB", from_colorspace=None):
     if original_pil:
         return Image.fromarray(image_transformed)
     return image_transformed
+
+
+def resize(
+    image: image_like, size, keep_aspect=False, interpolation=Interpolation.DEAFULT
+):
+    tw, th = _size_as_tuple(size)
+
+    if keep_aspect:
+        iw, ih = image_size(image)
+        scale_factor = tw / iw if iw < ih else th / ih
+        tw, th = tw * scale_factor, th * scale_factor
+    return _resize_impl(image, (tw, th), interpolation=interpolation)
+
+
+def rescale(image: image_like, scale_factor, interpolation=Interpolation.DEAFULT):
+    w, h = image_size(image)
+    size_scaled = w * scale_factor, h * scale_factor
+    return _resize_impl(image, size_scaled, interpolation=interpolation)
+
+
+def _resize_impl(image, size, interpolation=Interpolation.DEAFULT):
+    w, h = _size_as_tuple(size)
+    if _is_array(image):
+        return cv2.resize(image, (int(w), int(h)), interpolation=interpolation.opencv)
+    return image.resize((int(h), int(w)), interpolation=interpolation.pil)
 
 
 def _is_array(image):

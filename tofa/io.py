@@ -1,13 +1,14 @@
 import json
 import pickle
 from pathlib import Path
+from typing import Union
 
 import numpy as np
 import PIL
 import yaml
 from PIL import Image
 
-from tofa._typing import path_like
+from tofa._typing import path_classes, path_like
 from tofa.filesystem import as_path, existing_path, file_extension, prepare_directory
 from tofa.image_transforms import color_convert
 
@@ -149,10 +150,21 @@ def imwrite(image_path: path_like, image, create_parent=True, image_bgr=False):
         image = np.asarray(image)
 
     if not image_bgr:
-        image = color_convert(image, colorspace="BGR")
+        image = color_convert(image, from_colorspace="RGB", colorspace="BGR")
     return_code = cv2.imwrite(image_path, image)
     if not return_code:
         raise ValueError("OpenCV could not write image file to {}".format(image_path))
+
+
+def iterate_video(video: Union[path_like, cv2.VideoCapture]):
+    """Iterate over video stream"""
+    if isinstance(video, path_classes):
+        video = cv2.VideoCapture(str(video))
+    while True:
+        ok, frame = video.read()
+        if not ok:
+            break
+        yield frame
 
 
 def _get_image_read_backed(extension, backend=None):

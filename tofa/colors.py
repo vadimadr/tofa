@@ -55,7 +55,7 @@ def rgb(*color_components, normalize=False) -> ColorRGB:
 
 def bgr(*color_components, normalize=False):
     # use rgb() and reverse order
-    color = rgb(*color_components, normalize=normalize)
+    color = rgb(*reversed(color_components), normalize=normalize)
     return ColorBGR(*reversed(color))
 
 

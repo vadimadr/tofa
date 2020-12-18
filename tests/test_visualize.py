@@ -1,8 +1,14 @@
 import numpy as np
 
+from tofa.colors import bgr, rgb
 from tofa.io import imread, imwrite
-from tofa.visualization import (draw_bbox, draw_landmarks, draw_mask, draw_text,
-                                imshow_debug)
+from tofa.visualization import (
+    draw_bbox,
+    draw_landmarks,
+    draw_mask,
+    draw_text,
+    imshow_debug,
+)
 
 landmarks = [
     (318, 273),
@@ -37,3 +43,21 @@ def test_visualize_smoke(lena_rgb, get_asset):
 
     ref_image = imread(get_asset("lena_visualization.png"))
     np.testing.assert_allclose(lena_rgb, ref_image)
+
+
+def test_color__rgb():
+    assert rgb("red") == (255, 0, 0)
+    assert rgb(rgb("red")) == (255, 0, 0)
+    assert rgb(bgr("red")) == (255, 0, 0)
+    assert rgb(255, 0, 0) == (255, 0, 0)
+    assert rgb(1.0, 0, 0) == (255, 0, 0)
+    assert rgb("red").r == 255 and rgb("red").g == 0 and rgb("red").b == 0
+
+
+def test_color__bgr():
+    assert bgr("red") == (0, 0, 255)
+    assert bgr(rgb("red")) == (0, 0, 255)
+    assert bgr(bgr("red")) == (0, 0, 255)
+    assert bgr(255, 0, 0) == (255, 0, 0)
+    assert bgr(1.0, 0, 0) == (255, 0, 0)
+    assert bgr("red").r == 255 and bgr("red").g == 0 and bgr("red").b == 0

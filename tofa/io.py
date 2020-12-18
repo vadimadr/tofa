@@ -1,16 +1,18 @@
 import json
+import os
 import pickle
 from pathlib import Path
 from typing import Union
 
-import numpy as np
 import PIL
+import numpy as np
 import yaml
 from PIL import Image
 
 from tofa._typing import path_classes, path_like
 from tofa.filesystem import as_path, existing_path, file_extension, prepare_directory
 from tofa.image_transforms import color_convert
+from tofa.visualization import imshow_debug
 
 try:
     import cv2
@@ -126,11 +128,11 @@ def imread(
         image_mode = "RGB"
 
     if grayscale:
-        image = color_convert(image, colorspace="GRAY", from_colorspace=image_mode)
+        image = color_convert(image, to_colorspace="GRAY", from_colorspace=image_mode)
     elif rgb:
-        image = color_convert(image, colorspace="RGB", from_colorspace=image_mode)
+        image = color_convert(image, to_colorspace="RGB", from_colorspace=image_mode)
     else:
-        image = color_convert(image, colorspace="BGR", from_colorspace=image_mode)
+        image = color_convert(image, to_colorspace="BGR", from_colorspace=image_mode)
 
     if pil and not isinstance(image, Image.Image):
         image = Image.fromarray(image)
@@ -150,7 +152,7 @@ def imwrite(image_path: path_like, image, create_parent=True, image_bgr=False):
         image = np.asarray(image)
 
     if not image_bgr:
-        image = color_convert(image, from_colorspace="RGB", colorspace="BGR")
+        image = color_convert(image, to_colorspace="BGR", from_colorspace="RGB")
     return_code = cv2.imwrite(image_path, image)
     if not return_code:
         raise ValueError("OpenCV could not write image file to {}".format(image_path))
@@ -165,6 +167,86 @@ def iterate_video(video: Union[path_like, cv2.VideoCapture]):
         if not ok:
             break
         yield frame
+
+
+class VideoWriter:
+    """Wrapper for cv2.VideoWriter"""
+
+    CODECS = ("MP4V", "MJPG", "RAW", "RGBA")
+
+    def __init__(self, destination, resolution=None, fps=30, codec="MP4V"):
+        assert codec.upper() in VideoWriter.CODECS, f"Unknown codec value: {codec}"
+
+        self.destination = destination
+        self.next_video_fragment = 0
+        self.cv_writer = None
+        self.resolution = resolution
+        self.fps = fps
+        self.codec = codec.upper()
+
+        if self.resolution:
+            self._open_video_writer()
+
+    def get_video_file_name(self, file_ext):
+        file_name, ext = os.path.splitext(str(self.destination))
+
+        if ext and ext.lower() != file_ext.lower():
+            raise ValueError(
+                f"Unsupported file extension {ext} "
+                f"for codec {self.codec} expected: {file_ext}"
+            )
+        return file_name + file_ext
+
+    def write(self, frame):
+        if self.cv_writer is None:
+            ih, iw = frame.shape[:2]
+            self.resolution = (iw, ih)
+            self._open_video_writer()
+
+        self.cv_writer.write(frame)
+
+    def release(self):
+        if self.cv_writer is not None:
+            self.cv_writer.release()
+
+    def _open_video_writer(self):
+        self.release()
+        file_ext, codec_fourcc = self._get_resolution_and_codec()
+        video_path = self.get_video_file_name(file_ext)
+        self.cv_writer = cv2.VideoWriter(
+            video_path, codec_fourcc, self.fps, self.resolution
+        )
+
+    def _get_resolution_and_codec(self):
+        if self.codec == "MP4V":
+            return ".mp4", cv2.VideoWriter_fourcc(*"MP4V")
+        elif self.codec == "MJPG":
+            return ".avi", cv2.VideoWriter_fourcc(*"MJPG")
+        elif self.codec in ("RAW", "RGBA"):
+            return ".avi", cv2.VideoWriter_fourcc(*"RGBA")
+
+
+class DisplayVideoWriter(VideoWriter):
+    """Class that emulates cv2.VideoWriter but shows preview of the video"""
+
+    def __init__(self, window_name="playback", wait_space=True, resolution=None):
+        self.wait_space = wait_space
+        self.resolution = resolution
+        self.window_name = window_name
+        self._window_created = False
+
+    def write(self, frame):
+        self._window_created = True
+        imshow_debug(
+            frame,
+            self.window_name,
+            wait_space=self.wait_space,
+            resolution=self.resolution,
+        )
+
+    def release(self):
+        if self._window_created:
+            cv2.destroyWindow(self.window_name)
 
 
 def _get_image_read_backed(extension, backend=None):

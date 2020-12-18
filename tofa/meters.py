@@ -1,5 +1,6 @@
 import warnings
-from math import nan, sqrt
+from math import sqrt
+
 import numpy as np
 
 from tofa.torch_utils import as_numpy

@@ -7,6 +7,7 @@ from tofa.visualization import (
     draw_landmarks,
     draw_mask,
     draw_text,
+    draw_text_multiline,
     imshow_debug,
 )
 
@@ -42,6 +43,8 @@ def test_visualize_smoke(lena_rgb, get_asset):
 
     draw_text(lena_rgb, "Sample text")
     draw_text(lena_rgb, "Shadowed text", shadow=True, position=(0, 55))
+
+    draw_text_multiline(lena_rgb, "line 1\nline 2", position=(415, 25))
 
     ref_image = imread(get_asset("lena_visualization.png"))
     np.testing.assert_allclose(lena_rgb, ref_image)

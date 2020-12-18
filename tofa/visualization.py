@@ -1,4 +1,5 @@
 from collections import defaultdict, deque
+from typing import Union
 
 import cv2
 
@@ -91,6 +92,17 @@ def draw_text(
             line_type,
         )
     cv2.putText(image, str(text), (x, y), font, size, rgb(color), thickness, line_type)
+
+
+def draw_text_multiline(
+    image, lines: Union[str, list], position=(0, 25), vspace=30, *args, **kwargs
+):
+    if isinstance(lines, str):
+        lines = lines.split("\n")
+    x, y = position
+    for line in lines:
+        draw_text(image, line, (x, y), *args, **kwargs)
+        y += vspace
 
 
 def imshow(image, winname="imshow", delay=0, rgb=True, resize=None, keep_aspect=True):

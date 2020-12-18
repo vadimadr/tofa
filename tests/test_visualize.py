@@ -31,6 +31,7 @@ def test_visualize_smoke(lena_rgb, get_asset):
 
     bbox = (228, 228, 377, 377)
     draw_bbox(lena_rgb, bbox)
+    draw_bbox(lena_rgb, (350, 350, 480, 480), color="red", text="bbox text")
 
     # sample mask
     mask = np.full((512, 512), False)
@@ -40,6 +41,7 @@ def test_visualize_smoke(lena_rgb, get_asset):
     draw_landmarks(lena_rgb, landmarks)
 
     draw_text(lena_rgb, "Sample text")
+    draw_text(lena_rgb, "Shadowed text", shadow=True, position=(0, 55))
 
     ref_image = imread(get_asset("lena_visualization.png"))
     np.testing.assert_allclose(lena_rgb, ref_image)

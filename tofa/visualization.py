@@ -7,12 +7,10 @@ from tofa.image_transforms import rescale
 
 
 def draw_bbox(image, bbox, color=rgb("green"), line_width=1, text=None):
-    bbox = bbox[:4]
     x0, y0, x1, y1 = bbox[:4]
     cv2.rectangle(image, (x0, y0), (x1, y1), rgb(color), line_width)
     if text is not None:
-
-        draw_text(image, text, (x0, y0 - 5), color=color)
+        draw_text(image, text, (x0, y0 - 5), size=1.5, color=color)
     return image
 
 
@@ -72,13 +70,27 @@ def draw_mask(image, mask, color=rgb("blue"), alpha=0.5):
 def draw_text(
     image,
     text,
-    position=(5, 10),
-    color=rgb("blue"),
-    size=1,
+    position=(0, 25),
+    color=rgb("white"),
+    size=2.0,
     font=cv2.FONT_HERSHEY_PLAIN,
+    line_type=cv2.LINE_AA,
+    thickness=1,
+    shadow=False,
 ):
-    position_ = int(position[0]), int(position[1])
-    cv2.putText(image, str(text), position_, font, size, rgb(color))
+    x, y = int(position[0]), int(position[1])
+    if shadow:
+        cv2.putText(
+            image,
+            str(text),
+            (x + 1, y + 1),
+            font,
+            size,
+            rgb("black"),
+            thickness + 1,
+            line_type,
+        )
+    cv2.putText(image, str(text), (x, y), font, size, rgb(color), thickness, line_type)
 
 
 def imshow(image, winname="imshow", delay=0, rgb=True, resize=None, keep_aspect=True):

@@ -63,7 +63,7 @@ def image_size(image):
     return image.size
 
 
-def color_convert(image: image_like, colorspace="RGB", from_colorspace=None):
+def color_convert(image: image_like, to_colorspace="RGB", from_colorspace=None):
     original_pil = _is_pil_image(image)
     if from_colorspace is None:
         if original_pil and image.mode in ("RGB", "HSV", "LAB"):
@@ -76,20 +76,20 @@ def color_convert(image: image_like, colorspace="RGB", from_colorspace=None):
     else:
         from_colorspace = from_colorspace.upper()
 
-    colorspace = colorspace.upper()
+    to_colorspace = to_colorspace.upper()
     # PIL gray
-    if colorspace == "L":
-        colorspace = "GRAY"
+    if to_colorspace == "L":
+        to_colorspace = "GRAY"
 
-    if colorspace == from_colorspace:
+    if to_colorspace == from_colorspace:
         return image
     image_array = np.array(image)
 
-    if colorspace not in OPENCV_COLOR_TRANSFORM_MATRIX[from_colorspace]:
+    if to_colorspace not in OPENCV_COLOR_TRANSFORM_MATRIX[from_colorspace]:
         code_bgr = OPENCV_COLOR_TRANSFORM_MATRIX[from_colorspace]["BGR"]
         image_array = cv2.cvtColor(image_array, code_bgr)
         from_colorspace = "BGR"
-    code = OPENCV_COLOR_TRANSFORM_MATRIX[from_colorspace][colorspace]
+    code = OPENCV_COLOR_TRANSFORM_MATRIX[from_colorspace][to_colorspace]
     image_transformed = cv2.cvtColor(image_array, code)
 
     if original_pil:

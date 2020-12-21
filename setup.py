@@ -31,6 +31,11 @@ try:
 except ImportError:
     requirements.append("opencv-python")
 
+metadata = {}
+with Path(__file__).parent.joinpath("tofa", "__version__.py").open("r") as f:
+    exec(f.read(), metadata)
+
+
 setup(
     name=NAME,
     description=DESCRIPTION,
@@ -62,4 +67,6 @@ setup(
     author=AUTHOR,
     author_email=EMAIL,
     license=LICENSE,
+    version=metadata["__version__"],
+    project_urls={"Source": "https://github.com/vadimadr/tofa"},
 )

@@ -14,6 +14,7 @@ class LossModule(nn.Module, ABC):
 
 class LossFunction(LossModule):
     """Wraps torchvision criterion"""
+
     loss = None
 
     def __init__(self, output_key="predict", target_key="target", **loss_kwargs):

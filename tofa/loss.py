@@ -23,7 +23,7 @@ class LossFunction(LossModule):
         self.target_key = target_key
 
         if isinstance(self.loss, type):
-            self.loss_fn = self.loss_fn(**loss_kwargs)
+            self.loss_fn = self.loss(**loss_kwargs)
         else:
             self.loss_fn = partial(self.loss, **loss_kwargs)
 

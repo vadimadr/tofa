@@ -1,9 +1,8 @@
 from collections import Mapping, Sequence
 from pathlib import Path
 
-import torch
 import numpy as np
-
+import torch
 from torch import nn
 
 from tofa.misc import AttribDict

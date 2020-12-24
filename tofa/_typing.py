@@ -1,8 +1,8 @@
+import collections.abc
 from pathlib import Path
 from typing import Iterable, Union
 
 import numpy as np
-import collections.abc
 from PIL.Image import Image
 
 array = np.ndarray

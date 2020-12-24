@@ -5,8 +5,8 @@ import cv2
 import numpy as np
 from PIL import Image
 
-from tofa.torch_utils import as_numpy
 from tofa._typing import image_like
+from tofa.torch_utils import as_numpy
 
 InterpolationValue = namedtuple("InterpolationValue", ("str", "opencv", "pil"))
 

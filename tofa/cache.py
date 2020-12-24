@@ -1,5 +1,5 @@
-import json
 import hashlib
+import json
 
 from tofa.filesystem import as_path
 from tofa.io import _json_serializer, load_pickle, save_pickle

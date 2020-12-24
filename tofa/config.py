@@ -10,8 +10,8 @@ from warnings import warn
 
 from addict import Dict
 
-from tofa.io import load
 from tofa.filesystem import existing_path
+from tofa.io import load
 
 
 class BoolFlagAction(argparse.Action):

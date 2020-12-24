@@ -2,10 +2,8 @@ from bisect import bisect_right
 from typing import Union
 
 from torch.optim import Optimizer
-from torch.optim.lr_scheduler import (
-    ReduceLROnPlateau as _ReduceLROnPlateau,
-    _LRScheduler,
-)
+from torch.optim.lr_scheduler import ReduceLROnPlateau as _ReduceLROnPlateau
+from torch.optim.lr_scheduler import _LRScheduler
 
 
 class LRScheduler:

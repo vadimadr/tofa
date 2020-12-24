@@ -1,6 +1,5 @@
-from pprint import pprint
-
 from io import StringIO
+from pprint import pprint
 
 from addict import Dict
 

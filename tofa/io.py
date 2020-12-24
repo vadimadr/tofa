@@ -4,8 +4,8 @@ import pickle
 from pathlib import Path
 from typing import Union
 
-import PIL
 import numpy as np
+import PIL
 import yaml
 from PIL import Image
 

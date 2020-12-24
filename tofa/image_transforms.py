@@ -60,7 +60,8 @@ class Interpolation(Enum):
 def image_size(image):
     """Returns image size (w x h)"""
     if _is_array(image):
-        return image.shape[:2]
+        h, w = image.shape[:2]
+        return w, h
     return image.size
 
 

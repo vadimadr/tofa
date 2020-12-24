@@ -1,2 +1,8 @@
-torch
-numpy
+torch~=1.6.0
+numpy~=1.17.4
+Pillow~=6.2.1
+PyYAML~=5.3.1
+jpeg4py~=0.1.4
+addict~=2.2.1
+pytest~=5.3.5
+setuptools~=45.1.0

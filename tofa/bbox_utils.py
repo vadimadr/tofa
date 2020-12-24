@@ -1,4 +1,3 @@
-import cv2
 import numpy as np
 
 from tofa._typing import array
@@ -7,7 +6,6 @@ from tofa.torch_utils import as_numpy
 GREEN_COLOR = (255, 0, 0)
 
 
-####
 def bbox_intersection(bbox1, bbox2):
     nd_boxes1, nd_boxes2 = _bboxes_as_array(bbox1, bbox2)
 
@@ -53,47 +51,6 @@ def bbox_overlap(bbox1, bbox2):
     return bbox_area(bbox_inter) / bbox_area(bbox1)
 
 
-####
-
-
-def iou_matrix(bbox1, bbox2):
-    if np.size(bbox1) == 0 or np.size(bbox2) == 0:
-        shape = (len(bbox1), len(bbox2))
-        return np.empty(shape)
-
-    bbox1, bbox2 = _bboxes_as_array(bbox1, bbox2)
-    intersections = bbox_intersection(bbox1, bbox2)
-
-    # compute IoU
-    inter_area = bbox_area(intersections)
-    union_area = bbox_area(bbox1) + bbox_area(bbox2) - inter_area
-    return inter_area / union_area
-
-
-def overlap_matrix(bbox1, bbox2):
-    if np.size(bbox1) == 0 or np.size(bbox2) == 0:
-        shape = (len(bbox1), len(bbox2))
-        return np.empty(shape)
-
-    bbox1, bbox2 = _bboxes_as_array(bbox1, bbox2)
-    intersections = bbox_intersection(bbox1, bbox2)
-
-    # compute IoU
-    inter_area = bbox_area(intersections)
-    return inter_area / bbox_area(bbox1)
-
-
-def draw_bbox(image, bbox, color=GREEN_COLOR, linewidth=1, text=None):
-    # clip bbox and cast to int
-    h, w = image.shape[:2]
-    x0, y0, x1, y1 = np.asarray(bbox).astype(int)[:4].clip(0, (w, h, w, h))
-
-    cv2.rectangle(image, (x0, y0), (x1, y1), color, linewidth)
-    if text is not None:
-        cv2.putText(image, text, (x0, y0 - 5), cv2.FONT_HERSHEY_PLAIN, 1, color)
-    return image
-
-
 def nms_by_area(bboxes, iou_threshold=0.5):
     bboxes = sorted(bboxes, key=bbox_area, reverse=True)
     keep_bboxes = []
@@ -108,12 +65,12 @@ def nms_by_area(bboxes, iou_threshold=0.5):
 
 
 def bbox_corner_to_center(bbox_corner):
-    x0, y0, x1, y1 = bbox_corner
+    x0, y0, x1, y1 = bbox_corner[:4]
     return (x0 + x1) / 2, (y0 + y1) / 2, x1 - x0, y1 - y0
 
 
 def bbox_center_to_corner(bbox_center):
-    xc, yc, w, h = bbox_center
+    xc, yc, w, h = bbox_center[:4]
     return xc - w / 2, yc - h / 2, xc + w / 2, yc + h / 2
 
 

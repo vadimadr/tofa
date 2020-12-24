@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 from PIL import Image
 
+from tofa.torch_utils import as_numpy
 from tofa._typing import image_like
 
 InterpolationValue = namedtuple("InterpolationValue", ("str", "opencv", "pil"))
@@ -113,6 +114,46 @@ def rescale(image: image_like, scale_factor, interpolation=Interpolation.DEAFULT
     w, h = image_size(image)
     size_scaled = w * scale_factor, h * scale_factor
     return _resize_impl(image, size_scaled, interpolation=interpolation)
+
+
+def crop(image, position):
+    x1, y1, x2, y2 = map(int, position)
+    if _is_array(image):
+        return image[y1:y2, x1:x2]
+    return image.crop((x1, y1, x2, y2))
+
+
+def flip(img, horizontal=False):
+    if isinstance(img, np.ndarray):
+        if horizontal:
+            return img[:, ::-1, :]
+        return img[::-1, ...]
+    if horizontal:
+        return img.transpose(Image.FLIP_LEFT_RIGHT)
+    return img.transpose(Image.FLIP_TOP_BOTTOM)
+
+
+def hflip(img):
+    return flip(img, horizontal=True)
+
+
+def vflip(img):
+    return flip(img, horizontal=False)
+
+
+def crop_resize(img, crop_position, crop_size, interpolation=Interpolation.DEAFULT):
+    image_crop = crop(img, crop_position)
+    return resize(image_crop, crop_size, interpolation=interpolation)
+
+
+def perspective_crop(img, crop_points, crop_size, interpolation=Interpolation.DEAFULT):
+    assert isinstance(img, np.ndarray)
+    w, h = crop_size
+
+    output_position = np.array([[0, 0], [w, 0], [w, h], [0, h]], dtype=np.float32)
+    H = cv2.getPerspectiveTransform(as_numpy(crop_points, np.float32), output_position)
+    crop = cv2.warpPerspective(img, H, crop_size, flags=interpolation.opencv)
+    return crop
 
 
 def _resize_impl(image, size, interpolation=Interpolation.DEAFULT):

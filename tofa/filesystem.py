@@ -39,6 +39,12 @@ def existing_path(path: path_like, absolute=False, expanduser=True) -> Path:
     return path
 
 
+def make_path(path_like, absolute=False, expanduser=True) -> Path:
+    path = as_path(path_like, absolute=absolute, expanduser=expanduser)
+    path.mkdir(exist_ok=True, parents=True)
+    return path
+
+
 def file_extension(path: path_like, lowercase=True) -> str:
     path = as_path(path)
     _, extension = osp.splitext(path.name)

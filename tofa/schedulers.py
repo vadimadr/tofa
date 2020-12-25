@@ -113,7 +113,10 @@ class ExponentialLR(IterativeScheduler):
 
 
 class StepLR(IterativeScheduler):
-    def __init__(self, optimizer, base_lr, step_size: Union[int, list], gamma):
+    def __init__(self, optimizer, step_size: Union[int, list], gamma, base_lr=None):
+        if base_lr is None:
+            base_lr = optimizer.param_groups[0]["lr"]
+
         self.base_lr = base_lr
         self.gamma = gamma
         self.step_size = step_size

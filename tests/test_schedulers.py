@@ -41,7 +41,7 @@ def test_exp_scheduler():
 
 def test_fixed_step_scheduler():
     optimizer = _make_optimizer()
-    scheduler = StepLR(optimizer, 0.1, 2, 0.1)
+    scheduler = StepLR(optimizer, 2, 0.1)
 
     lrs = _step_n_epochs(scheduler, optimizer, 6)
     assert pytest.approx([1e-1, 1e-1, 1e-2, 1e-2, 1e-3, 1e-3]) == lrs
@@ -49,7 +49,7 @@ def test_fixed_step_scheduler():
 
 def test_multi_step_scheduler():
     optimizer = _make_optimizer()
-    scheduler = StepLR(optimizer, 0.1, [2, 4, 5], 0.1)
+    scheduler = StepLR(optimizer, [2, 4, 5], 0.1)
 
     lrs = _step_n_epochs(scheduler, optimizer, 7)
     assert pytest.approx([1e-1, 1e-1, 1e-2, 1e-2, 1e-3, 1e-4, 1e-4]) == lrs

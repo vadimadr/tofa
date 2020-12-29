@@ -51,17 +51,35 @@ def bbox_overlap(bbox1, bbox2):
     return bbox_area(bbox_inter) / bbox_area(bbox1)
 
 
-def nms_by_area(bboxes, iou_threshold=0.5):
-    bboxes = sorted(bboxes, key=bbox_area, reverse=True)
-    keep_bboxes = []
-    for bb in bboxes:
-        for other in keep_bboxes:
-            m = bbox_area(bbox_intersection(bb, other)) / bbox_area(bb)
-            if m > iou_threshold:
+def bbox_nms(
+    bboxes,
+    ranks=None,
+    intersection_function=bbox_iou,
+    intersection_matrix=None,
+    max_intersection=0.5,
+):
+    if ranks is None:
+        ranks = np.arange(bboxes.shape[0])[::-1]
+    ranks = sorted(ranks, reverse=True)
+    ord = np.argsort(ranks)[::-1]
+
+    if intersection_function in (bbox_iou, bbox_overlap):
+        intersection_matrix = intersection_function(bboxes, bboxes)
+
+    selected_boxes = []
+    for i in ord:
+        for j in selected_boxes:
+            if intersection_matrix is not None:
+                w = intersection_matrix[i, j]
+            else:
+                w = intersection_function(bboxes[i], bboxes[j])
+
+            if w > max_intersection:
                 break
         else:
-            keep_bboxes.append(bb)
-    return keep_bboxes
+            selected_boxes.append(i)
+
+    return [bboxes[i] for i in selected_boxes]
 
 
 def bbox_corner_to_center(bbox_corner):

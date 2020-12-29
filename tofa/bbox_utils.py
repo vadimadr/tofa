@@ -65,34 +65,52 @@ def nms_by_area(bboxes, iou_threshold=0.5):
 
 
 def bbox_corner_to_center(bbox_corner):
-    x0, y0, x1, y1 = bbox_corner[:4]
-    return (x0 + x1) / 2, (y0 + y1) / 2, x1 - x0, y1 - y0
+    np_bbox_corner = as_numpy(bbox_corner)
+
+    x0, y0, x1, y1 = np_bbox_corner[..., :4].T
+    xc_yc_w_h = ((x0 + x1) / 2, (y0 + y1) / 2, x1 - x0, y1 - y0)
+
+    if np_bbox_corner.ndim == 1:
+        if isinstance(bbox_corner, array):
+            return np.array(xc_yc_w_h)
+        return type(bbox_corner)(xc_yc_w_h)
+    return np.stack(xc_yc_w_h, axis=1)
 
 
 def bbox_center_to_corner(bbox_center):
-    xc, yc, w, h = bbox_center[:4]
-    return xc - w / 2, yc - h / 2, xc + w / 2, yc + h / 2
+    np_bbox_center = as_numpy(bbox_center)
+
+    xc, yc, w, h = np_bbox_center[..., :4].T
+    x0_y0_x1_y1 = (xc - w / 2, yc - h / 2, xc + w / 2, yc + h / 2)
+
+    if np_bbox_center.ndim == 1:
+        if isinstance(bbox_center, array):
+            return np.array(x0_y0_x1_y1)
+        return type(bbox_center)(x0_y0_x1_y1)
+    return np.stack(x0_y0_x1_y1, axis=1)
 
 
-def scale_bbox(bbox, scale_factor):
-    if isinstance(scale_factor, (int, float)):
-        scale_factor = (scale_factor, scale_factor)
-    xc, yc, w, h = bbox_corner_to_center(bbox)
-    return bbox_center_to_corner((xc, yc, w * scale_factor[0], h * scale_factor[1]))
+def shift_bbox(boxes, dx, dy=None):
+    if dy is None:
+        dy = dx
+    return as_numpy(boxes) + (dx, dy, dx, dy)
 
 
-def shift_bbox(bbox, shift):
-    if isinstance(shift, (int, float)):
-        shift = (shift, shift)
-    xc, yc, w, h = bbox_corner_to_center(bbox)
-    return bbox_center_to_corner((xc + shift[0], yc + shift[1], w, h))
+def scale_bbox(bbox, sx, sy=None):
+    if sy is None:
+        sy = sx
+    boxes_center = bbox_corner_to_center(bbox)
+    boxes_center[..., 2] *= sx
+    boxes_center[..., 3] *= sy
+    return bbox_center_to_corner(boxes_center)
 
 
-def clip_bbox(bbox, iw, ih):
+def clip_bbox(bbox, iw, ih, as_int=True):
     bbox = as_numpy(bbox)
-    bbox_clip = bbox.clip(0, (iw, ih))
-    bbox_int = bbox_clip.astype(int)
-    return bbox_int
+    bbox_clip = bbox.clip(0, (iw, ih, iw, ih))
+    if as_int:
+        bbox_clip = bbox_clip.astype(int)
+    return bbox_clip
 
 
 def _bboxes_as_array(bbox1, bbox2):
@@ -110,9 +128,3 @@ def _bboxes_as_array(bbox1, bbox2):
         nd_boxes2 = nd_boxes2[np.newaxis, :, :]
 
     return nd_boxes1, nd_boxes2
-
-
-def inside_bbox(point, bbox, margin=0):
-    x, y = point
-    x0, y0, x1, y1 = bbox
-    return x0 - margin <= x <= x1 + margin and y0 - margin <= y <= y1 + margin

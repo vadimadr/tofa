@@ -35,12 +35,12 @@ def as_path(path: path_like, absolute=False, expanduser=True) -> Path:
 def existing_path(path: path_like, absolute=False, expanduser=True) -> Path:
     path = as_path(path, absolute=absolute, expanduser=expanduser)
     if not path.exists():
-        raise FileNotFoundError(f"File {path_like} not found")
+        raise FileNotFoundError(f"File {path} not found")
     return path
 
 
-def make_path(path_like, absolute=False, expanduser=True) -> Path:
-    path = as_path(path_like, absolute=absolute, expanduser=expanduser)
+def make_path(path, absolute=False, expanduser=True) -> Path:
+    path = as_path(path, absolute=absolute, expanduser=expanduser)
     path.mkdir(exist_ok=True, parents=True)
     return path
 

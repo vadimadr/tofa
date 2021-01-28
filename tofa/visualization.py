@@ -8,7 +8,7 @@ from tofa.image_transforms import rescale
 
 
 def draw_bbox(image, bbox, color=rgb("green"), line_width=1, text=None):
-    x0, y0, x1, y1 = bbox[:4]
+    x0, y0, x1, y1 = map(_as_int, bbox[:4])
     cv2.rectangle(image, (x0, y0), (x1, y1), rgb(color), line_width)
     if text is not None:
         draw_text(image, text, (x0, y0 - 5), size=1.5, color=color)
@@ -40,8 +40,8 @@ def draw_circle(image, location, color=rgb("blue"), radius=3):
 
 
 def draw_line(image, x0, x1, color=rgb("blue"), thickness=2):
-    pt1 = (int(x0[0]), int(x0[1]))
-    pt2 = (int(x1[0]), int(x1[1]))
+    pt1 = _as_int(x0[0]), _as_int(x0[1])
+    pt2 = _as_int(x1[0]), _as_int(x1[1])
     cv2.line(image, pt1, pt2, rgb(color), thickness)
 
 
@@ -51,7 +51,7 @@ def draw_landmarks(image, landmarks, color=rgb("blue"), numbers=False, caption=N
         caption = [None] * len(landmarks)
     for i, (landmark, t) in enumerate(zip(landmarks, caption)):
         draw_circle(image, landmark, color, radius=3)
-        x, y = int(landmark[0]), int(landmark[1])
+        x, y = map(_as_int(landmark[:2]))
         if t is not None:
             draw_text(image, t, (x + 5, y + 5), color=color)
         if numbers and t is None:
@@ -160,3 +160,8 @@ def imshow_debug(
         cv2.destroyWindow(winname)
         raise KeyboardInterrupt("You pressed esc key.")
     return key
+
+LARGE_INT = (1 << 31) - 1
+def _as_int(x, lim=LARGE_INT):
+    """Workaround integer overflows for out-of-frame drawings."""
+    return max(-lim, min(int(x), lim))

@@ -1,4 +1,3 @@
-from tofa.bbox_utils import clip_bbox
 from collections import namedtuple
 from enum import Enum
 
@@ -7,6 +6,7 @@ import numpy as np
 from PIL import Image
 
 from tofa._typing import image_like
+from tofa.bbox_utils import clip_bbox
 from tofa.torch_utils import as_numpy
 
 InterpolationValue = namedtuple("InterpolationValue", ("str", "opencv", "pil"))

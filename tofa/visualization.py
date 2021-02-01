@@ -117,7 +117,7 @@ def imshow(image, winname="imshow", delay=0, rgb=True, resize=None, keep_aspect=
 
     # OpenCV does define WM_CLASS property.
     # Hence parsable window title is required to recognize imshow windows
-    # Use case: add rules for imshow windows in i3wm config 
+    # Use case: add rules for imshow windows in i3wm config
     win_title = f"opencv: {winname}"
 
     cv2.imshow(win_title, image)
@@ -166,7 +166,10 @@ def imshow_debug(
         raise KeyboardInterrupt("You pressed esc key.")
     return key
 
+
 LARGE_INT = (1 << 31) - 1
+
+
 def _as_int(x, lim=LARGE_INT):
     """Workaround integer overflows for out-of-frame drawings."""
     return max(-lim, min(int(x), lim))

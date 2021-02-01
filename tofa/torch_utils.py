@@ -42,8 +42,8 @@ def as_scalar(scalar_like):
 def tensor_to_image(
     tensor, mean=IMAGENET_MEAN_RGB, std=IMAGENET_STD_RGB, scale=255, to_bgr=False,
 ):
-    mean = torch.tensor(mean).view(-1, 1, 1)
-    std = torch.tensor(std).view(-1, 1, 1)
+    mean = as_tensor(mean, tensor).view(-1, 1, 1)
+    std = as_tensor(std, tensor).view(-1, 1, 1)
     denorm_tensor = (tensor * std + mean) * scale
     denorm_tensor = denorm_tensor.permute(1, 2, 0)
     image = as_numpy(denorm_tensor).astype(np.uint8)

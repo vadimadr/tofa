@@ -51,7 +51,7 @@ def draw_landmarks(image, landmarks, color=rgb("blue"), numbers=False, caption=N
         caption = [None] * len(landmarks)
     for i, (landmark, t) in enumerate(zip(landmarks, caption)):
         draw_circle(image, landmark, color, radius=3)
-        x, y = map(_as_int(landmark[:2]))
+        x, y = map(_as_int, landmark[:2])
         if t is not None:
             draw_text(image, t, (x + 5, y + 5), color=color)
         if numbers and t is None:
@@ -115,7 +115,12 @@ def imshow(image, winname="imshow", delay=0, rgb=True, resize=None, keep_aspect=
         else:
             image = resize(image, size=resize, keep_aspect=keep_aspect)
 
-    cv2.imshow(winname, image)
+    # OpenCV does define WM_CLASS property.
+    # Hence parsable window title is required to recognize imshow windows
+    # Use case: add rules for imshow windows in i3wm config 
+    win_title = f"opencv: {winname}"
+
+    cv2.imshow(win_title, image)
     key = cv2.waitKey(delay)
     return key
 

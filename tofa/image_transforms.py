@@ -1,3 +1,4 @@
+from tofa.bbox_utils import clip_bbox
 from collections import namedtuple
 from enum import Enum
 
@@ -118,7 +119,8 @@ def rescale(image: image_like, scale_factor, interpolation=Interpolation.DEAFULT
 
 
 def crop(image, position):
-    x1, y1, x2, y2 = map(int, position)
+    iw, ih = image_size(image)
+    x1, y1, x2, y2 = clip_bbox(position, iw, ih)
     if _is_array(image):
         return image[y1:y2, x1:x2]
     return image.crop((x1, y1, x2, y2))

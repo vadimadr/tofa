@@ -1,8 +1,11 @@
 import hashlib
 import json
+from logging import getLogger
 
 from tofa.filesystem import as_path
 from tofa.io import _json_serializer, load_pickle, save_pickle
+
+logger = getLogger(__name__)
 
 
 def object_hash_hex(obj, hash_method=hashlib.md5):
@@ -25,6 +28,7 @@ def cached(file=None):
             args_hex = object_hash_hex((args, kwargs))[-8:]
             file_hex = as_path("{!s}.{}".format(file, args_hex))
             if file_hex.exists():
+                logger.info(f"loading cache from: {file_hex}")
                 data = load_pickle(file_hex)
 
             if data["args"] != args or data["kwargs"] != kwargs:
@@ -32,6 +36,7 @@ def cached(file=None):
                 data["kwargs"] = kwargs
                 data["ret"] = fn(*args, **kwargs)
 
+                logger.info(f"saving cache to: {file_hex}")
                 save_pickle(data, file_hex)
             return data["ret"]
 

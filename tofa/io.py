@@ -170,6 +170,76 @@ def iterate_video(video: Union[path_like, cv2.VideoCapture]):
         yield frame
 
 
+class VideoReader:
+    """Wrapper for OpenCV VideoCapture"""
+
+    def __init__(self, video_path, rgb=True) -> None:
+        if isinstance(video_path, (Path, str)):
+            video_path = str(video_path)
+
+        self.video_cap = cv2.VideoCapture(video_path)
+        self.rgb = rgb
+        self._current_frame = None
+        self._current_frame_index = -1
+
+    def __iter__(self):
+        if self._current_frame_index != 0:
+            self._set_frame_pos(0)
+            self._next_frame()
+        while self._current_frame is not None:
+            yield self.get_current_frame()
+            self._next_frame()
+
+    def __len__(self):
+        frame_count = self.video_cap.get(cv2.CAP_PROP_FRAME_COUNT)
+        return int(frame_count)
+
+    def get_frame(self, frame_index, iterative=False):
+        if iterative:
+            if frame_index < self._current_frame_index:
+                self._set_frame_pos(0)
+            while self._current_frame_index < frame_index:
+                self._next_frame()
+        else:
+            self._set_frame_pos(frame_index)
+            self._next_frame()
+        return self.get_current_frame()
+
+    def get_current_frame(self):
+        if self._current_frame is None:
+            return None
+        if self.rgb:
+            return cv2.cvtColor(self._current_frame, cv2.COLOR_BGR2RGB)
+        return self._current_frame
+
+    @property
+    def shape(self):
+        if self._current_frame is None:
+            self._set_frame_pos(0)
+            self._next_frame()
+        return self._current_frame.shape
+
+    def _next_frame(self):
+        status, frame = self.video_cap.read()
+        if not status:
+            self._current_frame = None
+            return
+        self._current_frame = frame
+        self._current_frame_index += 1
+
+    def _set_frame_pos(self, frame_index):
+        if frame_index != 0:
+            warnings.warn(
+                "OpenCV frame seeking functionality is inexact: "
+                " (https://github.com/opencv/opencv/issues/9053)"
+            )
+        if frame_index == self._current_frame_index:
+            return
+        self.video_cap.set(cv2.CAP_PROP_POS_FRAMES, frame_index)
+        self._current_frame_index = frame_index - 1
+        self._current_frame = None
+
+
 class VideoWriter:
     """Wrapper for cv2.VideoWriter"""
 

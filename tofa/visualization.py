@@ -135,10 +135,9 @@ def imshow_debug(
     c - pause / continue execution
     q / esc - exit (raise keyboard interrupt)
     """
-
-    if not hasattr(imshow_debug, "c_key"):
+    if not hasattr(imshow_debug, "_paused"):
         imshow_debug._paused = False
-    if not hasattr(imshow_debug, "frame_history"):
+    if not hasattr(imshow_debug, "_frame_history"):
         imshow_debug._frame_history = defaultdict(lambda: deque(maxlen=maxlen))
 
     imshow_debug._frame_history[winname].append(image)

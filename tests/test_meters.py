@@ -34,6 +34,14 @@ def test_mean_meter__numpy():
     assert ret == pytest.approx(xs.mean())
 
 
+def test_mean_meter__empty():
+    meter = MeanMeter()
+    meter.update([])
+    assert meter.n == 0
+    with pytest.warns(RuntimeWarning):
+        assert meter.value is None
+
+
 def test_mean_meter__torch():
     xs = torch.tensor([8.5, 9.5, 11.5])
     meter = MeanMeter()

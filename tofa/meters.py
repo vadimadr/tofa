@@ -25,18 +25,21 @@ class MeanMeter(Meter):
         self.reset()
 
     def update(self, values):
-        values = _as_numpy_flat(values)
+        values = _as_numpy_flat(values).astype(float)
 
-        if self.mean is None:
-            self.mean = float(values.mean())
-            self.n = values.size
-        else:
-            sum_prev = self.mean * self.n
-            self.n += values.size
-            self.mean = (sum_prev + float(values.sum())) / self.n
+        if values.shape[0] == 0:
+            warnings.warn(
+                "Empty array passed to update method of a MeanMeter. State of of the meter is not affected",
+                RuntimeWarning,
+            )
+            return
+
+        prev_sum = self.mean * self.n
+        self.n += values.shape[0]
+        self.mean = (prev_sum + float(values.sum())) / self.n
 
     def reset(self):
-        self.mean = None
+        self.mean = 0
         self.n = 0
 
     @property

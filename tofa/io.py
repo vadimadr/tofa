@@ -243,9 +243,9 @@ class VideoReader:
 class VideoWriter:
     """Wrapper for cv2.VideoWriter"""
 
-    CODECS = ("MP4V", "MJPG", "RAW", "RGBA")
+    CODECS = ("MP4V", "MJPG", "RAW", "RGBA", "H264", "AVC", "X264")
 
-    def __init__(self, destination, resolution=None, fps=30, codec="MP4V"):
+    def __init__(self, destination, resolution=None, fps=30, codec="MP4V", rgb=True):
         assert codec.upper() in VideoWriter.CODECS, f"Unknown codec value: {codec}"
 
         self.destination = destination
@@ -253,6 +253,7 @@ class VideoWriter:
         self.cv_writer = None
         self.resolution = resolution
         self.fps = fps
+        self.rgb = rgb
         self.codec = codec.upper()
 
         if self.resolution:
@@ -290,11 +291,13 @@ class VideoWriter:
 
     def _get_resolution_and_codec(self):
         if self.codec == "MP4V":
-            return ".mp4", cv2.VideoWriter_fourcc(*"MP4V")
+            return ".mp4", cv2.VideoWriter_fourcc(*"mp4v")
         elif self.codec == "MJPG":
             return ".avi", cv2.VideoWriter_fourcc(*"MJPG")
         elif self.codec in ("RAW", "RGBA"):
             return ".avi", cv2.VideoWriter_fourcc(*"RGBA")
+        elif self.codec in ("H264", "AVC", "X264"):
+            return ".mp4", cv2.VideoWriter_fourcc(*"X264")
 
 
 class DisplayVideoWriter(VideoWriter):

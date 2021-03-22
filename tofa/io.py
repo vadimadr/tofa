@@ -3,6 +3,7 @@ import os
 import pickle
 from pathlib import Path
 from typing import Union
+import warnings
 
 import numpy as np
 import PIL
@@ -256,17 +257,16 @@ def _get_image_read_backed(extension, backend=None):
         return "opencv"
 
     if backend == "jpeg4py":
-        assert (
-            JPEG4PY_AVAILABLE,
-            "jpeg4py is not available, please install jpeg4py and libturbojpeg",
-        )
-        assert (
-            extension in ("jpeg", "jpg"),
-            "Only jpeg images can be opened with jpeg4py",
-        )
+        if not JPEG4PY_AVAILABLE:
+            raise ValueError(
+                "jpeg4py is not available, please install jpeg4py and libturbojpeg",
+            )
+        if extension not in ("jpeg", "jpg"):
+            raise ValueError("Only jpeg images can be opened with jpeg4py")
         return "jpeg4py"
     if backend == "opencv":
-        assert OPENCV_AVAILABE, "opencv is not available"
+        if not OPENCV_AVAILABE:
+            raise ValueError("opencv is not available")
         return "opencv"
     if backend == "PIL":
         return backend

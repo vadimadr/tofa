@@ -275,6 +275,9 @@ class VideoWriter:
             self.resolution = (iw, ih)
             self._open_video_writer()
 
+        if self.rgb:
+            frame = color_convert(frame, "RGB")
+
         self.cv_writer.write(frame)
 
     def release(self):

@@ -1,4 +1,4 @@
-from collections import Mapping, Sequence
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 import numpy as np
@@ -40,7 +40,11 @@ def as_scalar(scalar_like):
 
 
 def tensor_to_image(
-    tensor, mean=IMAGENET_MEAN_RGB, std=IMAGENET_STD_RGB, scale=255, to_bgr=False,
+    tensor,
+    mean=IMAGENET_MEAN_RGB,
+    std=IMAGENET_STD_RGB,
+    scale=255,
+    to_bgr=False,
 ):
     mean = as_tensor(mean, tensor).view(-1, 1, 1)
     std = as_tensor(std, tensor).view(-1, 1, 1)

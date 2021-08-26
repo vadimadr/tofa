@@ -1,3 +1,4 @@
+import sys
 from collections import defaultdict, deque
 from typing import Union
 
@@ -115,14 +116,26 @@ def imshow(image, winname="imshow", delay=0, rgb=True, resize=None, keep_aspect=
         else:
             image = resize(image, size=resize, keep_aspect=keep_aspect)
 
-    # OpenCV does define WM_CLASS property.
+    # OpenCV does not define WM_CLASS property.
     # Hence parsable window title is required to recognize imshow windows
     # Use case: add rules for imshow windows in i3wm config
     win_title = f"opencv: {winname}"
 
+    # if window is not opened
+    if win_title not in _opened_windows:
+        _opened_windows.add(win_title)
+        cv2.namedWindow(win_title, cv2.WINDOW_NORMAL)
+        if sys.platform == "darwin":
+            # workaround to bring new window to foreground in MacOS
+            cv2.setWindowProperty(
+                win_title, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN
+            )
+            cv2.setWindowProperty(win_title, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_NORMAL)
+
     cv2.imshow(win_title, image)
-    key = cv2.waitKey(delay)
-    return key
+    if delay is not None:
+        return cv2.waitKey(delay)
+    return
 
 
 def imshow_debug(
@@ -135,9 +148,9 @@ def imshow_debug(
     c - pause / continue execution
     q / esc - exit (raise keyboard interrupt)
     """
-    if not hasattr(imshow_debug, "_paused"):
-        imshow_debug._paused = False
     if not hasattr(imshow_debug, "_frame_history"):
+        # window opened for the first time
+        imshow_debug._paused = False
         imshow_debug._frame_history = defaultdict(lambda: deque(maxlen=maxlen))
 
     imshow_debug._frame_history[winname].append(image)
@@ -172,3 +185,6 @@ LARGE_INT = (1 << 31) - 1
 def _as_int(x, lim=LARGE_INT):
     """Workaround integer overflows for out-of-frame drawings."""
     return max(-lim, min(int(x), lim))
+
+
+_opened_windows = set()

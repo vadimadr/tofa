@@ -173,11 +173,16 @@ def iterate_video(video: Union[path_like, cv2.VideoCapture]):
 class VideoReader:
     """Wrapper for OpenCV VideoCapture"""
 
-    def __init__(self, video_path, rgb=True) -> None:
+    def __init__(self, video_path, resolution=None, rgb=True) -> None:
         if isinstance(video_path, (Path, str)):
             video_path = str(video_path)
 
         self.video_cap = cv2.VideoCapture(video_path)
+        if resolution is not None:
+            w, h = resolution
+            self.video_cap.set(cv2.CAP_PROP_FRAME_WIDTH, w)
+            self.video_cap.set(cv2.CAP_PROP_FRAME_HEIGHT, h)
+
         self.rgb = rgb
         self._current_frame = None
         self._current_frame_index = -1
@@ -194,7 +199,10 @@ class VideoReader:
         frame_count = self.video_cap.get(cv2.CAP_PROP_FRAME_COUNT)
         return int(frame_count)
 
-    def get_frame(self, frame_index, iterative=False):
+    def get_frame(self, frame_index=None, iterative=False):
+        if frame_index is None:
+            frame_index = max(self._current_frame_index, 0)
+
         if iterative:
             if frame_index < self._current_frame_index:
                 self._set_frame_pos(0)
@@ -291,6 +299,11 @@ class VideoWriter:
         self.cv_writer = cv2.VideoWriter(
             video_path, codec_fourcc, self.fps, self.resolution
         )
+
+        if not self.cv_writer.isOpened():
+            raise RuntimeError(
+                f"Stream {self.destination} for VideoWriter is not opened."
+            )
 
     def _get_resolution_and_codec(self):
         if self.codec == "MP4V":

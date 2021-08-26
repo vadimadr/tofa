@@ -6,3 +6,4 @@ jpeg4py~=0.1.4
 addict~=2.2.1
 pytest~=5.3.5
 setuptools~=45.1.0
+coloredlogs~=14.3

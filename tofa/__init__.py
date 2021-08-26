@@ -5,20 +5,25 @@ from tofa.io import load, save
 from tofa.misc import AttribDict
 from tofa.registry import Registry
 from tofa.torch_utils import as_numpy, as_scalar, as_tensor
+from tofa.visualization import imshow_debug
+from tofa.logging import make_logger, basic_config
 
 __all__ = [
     "__version__",
-    "Registry",
-    "Config",
-    "BoolFlagAction",
-    "ConfigArgumentParser",
-    "AttribDict",
     "as_numpy",
+    "as_path",
     "as_scalar",
     "as_tensor",
-    "load",
-    "save",
-    "make_path",
+    "AttribDict",
+    "basic_config",
+    "BoolFlagAction",
+    "Config",
+    "ConfigArgumentParser",
     "existing_path",
-    "as_path",
+    "imshow_debug",
+    "load",
+    "make_logger",
+    "make_path",
+    "Registry",
+    "save",
 ]

@@ -2,8 +2,14 @@ import numpy as np
 import pytest
 
 from tofa.bbox_utils import (
-    bbox_area, bbox_center_to_corner, bbox_corner_to_center, bbox_intersection,
-    bbox_iou, clip_bbox, scale_bbox, shift_bbox,
+    bbox_area,
+    bbox_center_to_corner,
+    bbox_corner_to_center,
+    bbox_intersection,
+    bbox_iou,
+    clip_bbox,
+    scale_bbox,
+    shift_bbox,
 )
 
 

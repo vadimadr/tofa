@@ -4,7 +4,6 @@ from pathlib import Path
 
 from tofa._typing import path_like
 
-
 IMG_EXTENSIONS = (
     ".jpg",
     ".jpeg",

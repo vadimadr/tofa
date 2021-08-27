@@ -67,13 +67,16 @@ def image_size(image):
 
 
 def color_convert(image: image_like, to_colorspace="RGB", from_colorspace=None):
-    original_pil = _is_pil_image(image)
+    original_pil = False
     if from_colorspace is None:
-        if original_pil and image.mode in ("RGB", "HSV", "LAB"):
-            from_colorspace = image.mode
-        elif original_pil:
-            raise ValueError(f"Unsupported conversion from PIL mode: {image.mode}")
+        if isinstance(image, Image.Image):
+            original_pil = True
+            if image.mode in ("RGB", "HSV", "LAB"):
+                from_colorspace = image.mode
+            else:
+                raise ValueError(f"Unsupported conversion from PIL mode: {image.mode}")
         else:
+            original_pil = False
             # default color space for OpenCV is BGR
             from_colorspace = "BGR"
     else:
@@ -168,10 +171,6 @@ def _resize_impl(image, size, interpolation=Interpolation.DEAFULT):
 
 def _is_array(image):
     return isinstance(image, np.ndarray)
-
-
-def _is_pil_image(image):
-    return isinstance(image, Image.Image)
 
 
 def _size_as_tuple(size):

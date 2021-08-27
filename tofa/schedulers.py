@@ -63,8 +63,8 @@ class WarmUpWrapper(Optimizer):
     def load_state_dict(self, state_dict: dict) -> None:
         self.optimizer.load_state_dict(state_dict)
 
-    def zero_grad(self) -> None:
-        self.optimizer.zero_grad()
+    def zero_grad(self, set_to_none=False) -> None:
+        self.optimizer.zero_grad(set_to_none)
 
     def add_param_group(self, param_group: dict) -> None:
         self.optimizer.add_param_group(param_group)
@@ -124,7 +124,7 @@ class StepLR(IterativeScheduler):
         self.step_size = step_size
         self.constant_step = isinstance(step_size, int)
 
-        if not self.constant_step:
+        if not isinstance(step_size, int):
             assert sorted(step_size) == step_size
             assert len(step_size) == len(set(step_size))
 

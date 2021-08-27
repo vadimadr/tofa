@@ -12,8 +12,9 @@ from logging import (
     getLogger,
     root,
 )
+from typing import Any, Dict
 
-_all_loggers = {}
+_all_loggers: Dict[str, Any] = {}
 
 
 def make_logger(name=root.name, level="DEBUG", colored=True, **kwargs):

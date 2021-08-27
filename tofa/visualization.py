@@ -1,6 +1,6 @@
 import sys
 from collections import defaultdict, deque
-from typing import Union
+from typing import Set, Union
 
 import cv2
 
@@ -187,4 +187,4 @@ def _as_int(x, lim=LARGE_INT):
     return max(-lim, min(int(x), lim))
 
 
-_opened_windows = set()
+_opened_windows: Set[str] = set()

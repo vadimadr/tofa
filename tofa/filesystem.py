@@ -4,11 +4,6 @@ from pathlib import Path
 
 from tofa._typing import path_like
 
-try:
-    import jstyleson as json
-except ImportError:
-    import json
-
 
 IMG_EXTENSIONS = (
     ".jpg",

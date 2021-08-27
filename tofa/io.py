@@ -1,9 +1,9 @@
 import json
 import os
 import pickle
+import warnings
 from pathlib import Path
 from typing import Union
-import warnings
 
 import numpy as np
 import PIL

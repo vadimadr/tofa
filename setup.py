@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 NAME = "tofa"
 DESCRIPTION = "Collection of requisites to speed up research & development with PyTorch"

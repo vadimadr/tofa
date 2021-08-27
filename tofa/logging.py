@@ -1,19 +1,17 @@
+import sys
 from logging import (
     CRITICAL,
     DEBUG,
     ERROR,
     FATAL,
+    INFO,
+    WARNING,
     FileHandler,
     Formatter,
-    INFO,
     StreamHandler,
-    WARNING,
     getLogger,
     root,
 )
-import sys
-
-import numpy as np
 
 _all_loggers = {}
 

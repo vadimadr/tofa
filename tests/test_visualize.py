@@ -1,14 +1,13 @@
 import numpy as np
 
 from tofa.colors import bgr, rgb
-from tofa.io import imread, imwrite
+from tofa.io import imread
 from tofa.visualization import (
     draw_bbox,
     draw_landmarks,
     draw_mask,
     draw_text,
     draw_text_multiline,
-    imshow_debug,
 )
 
 landmarks = [

@@ -1,10 +1,10 @@
 from pathlib import Path
 
-from tofa.io import imread, imwrite, load, save
-
 import cv2
 import numpy as np
 from PIL import Image
+
+from tofa.io import imread, imwrite, load, save
 
 TEST_FILE_CONTENTS = {
     "american": ["Boston Red Sox", "Detroit Tigers", "New York Yankees"],

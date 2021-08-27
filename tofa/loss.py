@@ -1,6 +1,6 @@
 from abc import ABC
 from functools import partial
-from typing import Any, Mapping
+from typing import Mapping
 
 from torch import nn
 

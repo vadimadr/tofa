@@ -29,7 +29,8 @@ class MeanMeter(Meter):
 
         if values.shape[0] == 0:
             warnings.warn(
-                "Empty array passed to update method of a MeanMeter. State of of the meter is not affected",
+                "Empty array passed to update method of a MeanMeter. "
+                "State of of the meter is not affected",
                 RuntimeWarning,
             )
             return

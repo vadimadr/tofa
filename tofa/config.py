@@ -15,7 +15,8 @@ from tofa.io import load
 
 
 class BoolFlagAction(argparse.Action):
-    """Action that stores bool flag depending on whether --option or --no-option is passed"""
+    """Action that stores bool flag depending on
+    whether --option or --no-option is passed"""
 
     def __init__(self, option_strings, dest, default=False, required=False, help=None):
         option_strings = option_strings + [
@@ -186,8 +187,7 @@ class Config(object):
 
     @staticmethod
     def auto_argparser(description=None):
-        """Generate argparser from config file automatically (experimental)
-        """
+        """Generate argparser from config file automatically (experimental)"""
         partial_parser = ConfigArgumentParser(description=description)
         partial_parser.add_argument("config", help="config file path")
         cfg_file = partial_parser.parse_known_args()[0].config

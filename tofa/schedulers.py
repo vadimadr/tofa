@@ -2,15 +2,17 @@ from bisect import bisect_right
 from typing import Union
 
 from torch.optim import Optimizer
-from torch.optim.lr_scheduler import ReduceLROnPlateau as _ReduceLROnPlateau
-from torch.optim.lr_scheduler import _LRScheduler
+from torch.optim.lr_scheduler import (
+    ReduceLROnPlateau as _ReduceLROnPlateau,
+    _LRScheduler,
+)
 
 
 class LRScheduler:
     """Base class for schedulers"""
 
     def step(self, metric=None, step=None):
-        raise NotImplemented
+        raise NotImplementedError
 
 
 class ReduceLROnPlateau(_ReduceLROnPlateau, LRScheduler):
@@ -83,7 +85,7 @@ class IterativeScheduler(_LRScheduler, LRScheduler):
         return lrs
 
     def compute_lr(self, step):
-        raise NotImplemented
+        raise NotImplementedError
 
 
 class LinearLR(IterativeScheduler):

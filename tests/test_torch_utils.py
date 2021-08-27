@@ -1,14 +1,12 @@
 import numpy as np
+from torchvision.transforms import Normalize, ToTensor
 
-from torch.functional import norm
 from tofa.torch_utils import (
     IMAGENET_MEAN_RGB,
     IMAGENET_STD_RGB,
     as_numpy,
     tensor_to_image,
 )
-
-from torchvision.transforms import Normalize, ToTensor
 
 
 def test_as_numpy():
@@ -19,7 +17,8 @@ def test_as_numpy():
     scalar = 42.5
     scalar_arr = as_numpy(scalar)
 
-    print(scalar)
+    assert isinstance(scalar_arr, np.ndarray)
+    assert scalar_arr.shape == ()
 
 
 def test_tensor_to_image(lena_rgb):

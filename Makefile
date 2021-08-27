@@ -30,6 +30,11 @@ lint: ## check style with flake8
 	flake8 tofa tests
 	mypy tofa tests
 
+format:
+	autoflake -ir tofa
+	isort .
+	black .
+
 test: ## run tests quickly with the default Python
 	pytest
 

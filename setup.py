@@ -43,7 +43,7 @@ setup(
     long_description_content_type="text/markdown",
     url=URL,
     packages=find_packages(),
-    requirements=requirements,
+    install_requires=requirements,
     python_requires=">=3.6",
     keywords=KEYWORDS,
     classifiers=[

@@ -4,7 +4,7 @@ coverage==4.5.4
 flake8==3.7.8
 isort==5.9.1
 mypy==0.910
-pip==19.2.3
+pip==21.1
 pytest-cov==2.10.1
 pytest==6.2.4
 Sphinx==1.8.5

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tofa"
-version = "0.0.7"
+version = "0.0.8"
 description = "Collection of requisites to speed up research & development with PyTorch"
 authors = ["Vadim Andronov <vadimadr@gmail.com>"]
 license = "BSD-3"

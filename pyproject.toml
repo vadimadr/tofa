@@ -1,0 +1,102 @@
+[tool.poetry]
+name = "tofa"
+version = "0.0.8"
+description = "Collection of requisites to speed up research & development with PyTorch"
+authors = ["Vadim Andronov <vadimadr@gmail.com>"]
+license = "BSD-3"
+homepage = "https://github.com/vadimadr/tofa"
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+keywords = [
+    "PyTorch",
+    "Computer Vision",
+    "Deep Learning",
+    "Machine Learning",
+    "Research",
+]
+readme = "README.md"
+repository = "https://github.com/vadimadr/tofa"
+
+[tool.poetry.dependencies]
+python = ">=3.8.1,<4.0.0"
+addict = ">=2.2.1"
+coloredlogs = ">=14.3"
+jpeg4py = ">=0.1.4"
+numpy = ">=1.17.4"
+Pillow = ">=6.2.1,<10.0.0"
+pytest = ">=5.3.5"
+PyYAML = ">=5.4"
+setuptools = ">=45.1.0"
+torch = ">=1.6.0"
+opencv-python = "^4.0.0.0"
+torchvision = "^0.16.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+coverage = "*"
+flake8 = "*"
+isort = "*"
+mypy = "*"
+pip = "*"
+pytest-cov = "*"
+pytest = "*"
+Sphinx = "*"
+wheel = "*"
+poetry-bumpversion = "*"
+autoflake = "^2.2.1"
+flake8-pyproject = "^1.2.3"
+
+[build-system]
+requires = ["poetry-core>=1.6.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+
+[tool.coverage.run]
+branch = true
+
+[tool.isort]
+profile = "black"
+combine_as_imports = true
+default_section = "THIRDPARTY"
+include_trailing_comma = true
+line_length = 88
+multi_line_output = 5
+
+[tool.pytest]
+testpaths = ["tests"]
+
+[tool.flake8]
+exclude = ["build", ".git", ".tox", "./tests/.env"]
+ignore = "E203, E266, E501, W503"
+max-line-length = 88
+max-complexity = 18
+select = "B,C,E,F,W,T4,B9"
+
+[tool.poetry_bumpversion.file."tofa/__init__.py"]
+
+[tool.mypy]
+disallow_untyped_defs = false
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["yaml.*"]
+ignore_missing_imports = true

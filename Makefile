@@ -38,7 +38,6 @@ format:
 test: ## run tests quickly with the default Python
 	pytest
 
-
 coverage-report: ## check code coverage quickly with the default Python
 	pytest --cov=tofa --junitxml=junit.xml
 	coverage html
@@ -47,18 +46,11 @@ coverage-report: ## check code coverage quickly with the default Python
 coverage: coverage-report
 	$(BROWSER) htmlcov/index.html
 
-
 publish: dist ## package and upload a release
-	twine upload dist/*
+	poetry publish
 
 dist: clean ## builds source and wheel package
-	python setup.py sdist
-	python setup.py bdist_wheel
-	ls -l dist
-
-install: clean ## install the package to the active Python's site-packages
-	python setup.py install
+	poetry build
 
 develop: clean ## Conifure python environment for develooping this package
-	pip install -r requirements-dev.txt
-	python setup.py develop
+	poetry install --with dev

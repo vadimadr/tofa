@@ -136,4 +136,4 @@ class StepLR(IterativeScheduler):
         else:
             r = bisect_right(self.step_size, step)
 
-        return self.base_lr * self.gamma ** r
+        return self.base_lr * self.gamma**r

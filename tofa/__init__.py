@@ -1,4 +1,3 @@
-from tofa.__version__ import __version__
 from tofa.config import BoolFlagAction, Config, ConfigArgumentParser
 from tofa.filesystem import as_path, existing_path, make_path
 from tofa.io import load, save
@@ -27,3 +26,5 @@ __all__ = [
     "Registry",
     "save",
 ]
+
+__version__ = "0.0.7"

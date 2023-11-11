@@ -65,7 +65,7 @@ class StdMeter(Meter):
 
     def update(self, values):
         values = _as_numpy_flat(values)
-        self.sq_mean.update(values ** 2)
+        self.sq_mean.update(values**2)
         self.mean.update(values)
         self.n += values.size
 
@@ -82,7 +82,7 @@ class StdMeter(Meter):
 
         m1 = self.sq_mean.value
         m2 = self.mean.value
-        return sqrt(m1 - m2 ** 2)
+        return sqrt(m1 - m2**2)
 
 
 class MedianMeter(Meter):

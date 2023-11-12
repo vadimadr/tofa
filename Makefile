@@ -27,21 +27,21 @@ clean-test: ## remove test and coverage artifacts
 	rm -f junit.xml
 
 lint: ## check style with flake8
-	flake8 tofa tests
-	mypy tofa tests
+	poetry run flake8 tofa tests
+	poetry run mypy tofa tests
 
 format:
-	autoflake -ir tofa
-	isort .
-	black .
+	poerty run autoflake -ir tofa
+	poerty run isort .
+	poerty run black .
 
 test: ## run tests quickly with the default Python
-	pytest
+	poetry run pytest
 
 coverage-report: ## check code coverage quickly with the default Python
-	pytest --cov=tofa --junitxml=junit.xml
-	coverage html
-	coverage xml
+	poetry run pytest --cov=tofa --junitxml=junit.xml
+	poetry run coverage html
+	poetry run coverage xml
 
 coverage: coverage-report
 	$(BROWSER) htmlcov/index.html

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tofa"
-version = "0.0.8"
+version = "0.0.9"
 description = "Collection of requisites to speed up research & development with PyTorch"
 authors = ["Vadim Andronov <vadimadr@gmail.com>"]
 license = "BSD-3"
@@ -46,7 +46,7 @@ PyYAML = ">=5.4"
 setuptools = ">=45.1.0"
 torch = ">=1.6.0"
 opencv-python = "^4.0.0.0"
-torchvision = "^0.16.0"
+torchvision = ">=0.7.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"

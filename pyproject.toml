@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tofa"
-version = "0.0.9"
+version = "0.0.10"
 description = "Collection of requisites to speed up research & development with PyTorch"
 authors = ["Vadim Andronov <vadimadr@gmail.com>"]
 license = "BSD-3"
@@ -40,7 +40,7 @@ addict = ">=2.2.1"
 coloredlogs = ">=14.3"
 jpeg4py = ">=0.1.4"
 numpy = ">=1.17.4"
-Pillow = ">=6.2.1,<10.0.0"
+Pillow = ">=6.2.1,<11.0.0"
 pytest = ">=5.3.5"
 PyYAML = ">=5.4"
 setuptools = ">=45.1.0"

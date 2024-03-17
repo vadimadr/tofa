@@ -36,11 +36,14 @@ OPENCV_COLOR_TRANSFORM_MATRIX = {
     "GRAY": {"RGB": cv2.COLOR_GRAY2RGB, "BGR": cv2.COLOR_GRAY2BGR},
 }
 
+# Pillow version compatibility
+PIL_BILINEAR = Image.BILINEAR if hasattr(Image, "BILINEAR") else Image.LINEAR
+PIL_BICUBIC = Image.BICUBIC if hasattr(Image, "BICUBIC") else Image.CUBIC
 
 class Interpolation(Enum):
     NEAREST = InterpolationValue("nearest", cv2.INTER_NEAREST, Image.NEAREST)
-    LINEAR = InterpolationValue("linear", cv2.INTER_LINEAR, Image.LINEAR)
-    CUBIC = InterpolationValue("cubic", cv2.INTER_CUBIC, Image.CUBIC)
+    LINEAR = InterpolationValue("linear", cv2.INTER_LINEAR, PIL_BILINEAR)
+    CUBIC = InterpolationValue("cubic", cv2.INTER_CUBIC, PIL_BICUBIC)
     LANCZOS = InterpolationValue("lanczos", cv2.INTER_LANCZOS4, Image.LANCZOS)
 
     DEAFULT = LINEAR
